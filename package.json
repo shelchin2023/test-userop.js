@@ -1,0 +1,17 @@
+{
+  "name": "test-userop.js",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@typechain/ethers-v5": "^11.1.2",
+    "@zerodev/sdk": "^4.3.4",
+    "ethers": "5.7",
+    "userop": "0.3.3"
+  }
+}
