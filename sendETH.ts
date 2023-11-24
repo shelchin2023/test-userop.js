@@ -4,7 +4,7 @@ import { UserOperationBuilder, Client, BundlerJsonRpcProvider } from "userop";
 import {
     Kernel__factory,
   } from './typechain';
-import { getInitCode } from "./utils/gteInitCode";
+import { getInitCode } from "./utils/getInitCode";
 import { getUserOpHash } from "./utils/getUserOpHash";
 import { OpToJSON } from "./utils/OpToJSON";
 export interface ICall {
@@ -54,9 +54,10 @@ const callData  = kernelFactoryInstance.interface.encodeFunctionData("execute", 
 const builder = new UserOperationBuilder().setCallData(callData).setSender(aaAddress).setInitCode(initCode);
 const client = await Client.init(nodeRpcUrl, { entryPoint });
 const userOp = await client.buildUserOperation(builder)
-const userOpHash = getUserOpHash(userOp,entryPoint,chainId)
 
+const userOpHash = getUserOpHash(userOp,entryPoint,chainId)
 userOp.signature = "0x27f8fd39ee7a98b175d52e5d3e3437cff1596c22cccb824a677680de96951a9c186e7ca35c64034509d825822ba6edab373221f22c037d1c93ca167631d1880f1b"
+
 console.log({userOp,userOpHash})
 
 try{
@@ -68,3 +69,5 @@ try{
 }catch(e){
     console.log("eth_sendUserOperation",e)
 }
+
+ 

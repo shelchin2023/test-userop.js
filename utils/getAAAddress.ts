@@ -3,7 +3,7 @@ import {
   EntryPoint__factory,
 } from '../typechain';
 
-import { getInitCode } from "./gteInitCode";
+import { getInitCode } from "./getInitCode";
 
 export async function getAAAddress(
   userAddress: string,
