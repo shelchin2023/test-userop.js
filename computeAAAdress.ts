@@ -8,7 +8,7 @@ const kernelImpl = "0xA9c87136a4412350DEBC62412971D873c8739Fd3";
 const ECDSAValidator = "0x3Cc7F7259e776A3B308189A4e5a83a14eF294CD2";
 
 // EOA Address
-const userAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+const userAddress = "0x3E29493118A1504dD4b8cb077796851B478388b4"
 const provider = new ethers.providers.JsonRpcProvider(nodeRpcUrl);
 
 const aaAddress = await getAAAddress(
