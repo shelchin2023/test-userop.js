@@ -8,7 +8,10 @@ import {
 } from './typechain';
 import { getInitCode } from "./utils/getInitCode";
 import { getUserOpHash } from "./utils/getUserOpHash";
+import { getAAAddress } from "./utils/getAAAddress";
 import { OpToJSON } from "./utils/OpToJSON";
+
+
 export interface ICall {
   to: string;
   value: BigNumberish;
@@ -25,8 +28,8 @@ const call: ICall = {
 }
 
 // 变数
-const userAddress = "0xCb881bd0c621b636aD5eca617C2a1989F4BD0901"
-const aaAddress = "0x84c6aD48086a1a50e1a510B432caa15e8A988f1C"
+// const userAddress = "0x914850eC53748207c22A8a49B8DD5b8443a70206"
+// const aaAddress = "0x84c6aD48086a1a50e1a510B432caa15e8A988f1C"
 
 const nodeRpcUrl = "https://rpc-l2-testnet.fusionist.io";
 const entryPoint = "0xbe7a3f2A0aAB7649f832585Bbe00E73Eba980636";
@@ -36,10 +39,20 @@ const ECDSAValidator = "0x3Cc7F7259e776A3B308189A4e5a83a14eF294CD2";
 const chainId = "6480001001"
 const provider = new ethers.providers.JsonRpcProvider(nodeRpcUrl);
 
+
+const privateKey = '1f26931b3ea308d4fc11708a913bb8555e16c5ce9632fdae27c310fc7a0e72ed';
+const signer = new ethers.Wallet(privateKey, provider);
+const userAddress = signer.address
+
+console.log({userAddress})
+
 const bundlerUrl = "https://bundler-l2-testnet.fusionist.io"
 
 const salt = "0"
 const initCode = getInitCode(userAddress, salt, provider, kernelFactory, kernelImpl, ECDSAValidator)
+const aaAddress = await getAAAddress(userAddress, salt, provider,entryPoint, kernelFactory, kernelImpl, ECDSAValidator)
+console.log("===000===",aaAddress)
+
 
 const kernelFactoryInstance = Kernel__factory.connect(
   kernelFactory,
@@ -84,9 +97,15 @@ const userOp = await client.buildUserOperation(builder)
 
 const userOpHash = getUserOpHash(userOp, entryPoint, chainId)
 
-console.log({ userOp, userOpHash })
+// console.log({ userOp, userOpHash })
 
 userOp.signature = "0x13b2282d3b9c3df36f763e3637a2f1da3f6d443681573bcefcbd27d52bd0f3d6713d18210f43ef80e8ff4cc01dd868d660e2a41663a9753527683d0475b36e3c1c"
+userOp.signature = await signer.signMessage(
+  ethers.utils.arrayify(userOpHash)
+);
+console.log("===111===",userOp.signature)
+
+
 // 必须在 签名签名添加一个 mode ,长度为4个字节，参考  https://docs.zerodev.app/extend-wallets/overview#validation-phase
 userOp.signature = userOp.signature.replace("0x", "0x00000000")
 console.log({ userOp, userOpHash })
